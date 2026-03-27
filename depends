@@ -21,3 +21,14 @@ bc
 gpg
 pigz
 arch-test
+java:openjdk-17-jdk
+qemu-arm-static:qemu-user-static
+qemu-nbd:qemu-utils
+kpartx
+pkg-config
+gcc:build-essential
+cmake
+python3
+ant
+sudo
+
