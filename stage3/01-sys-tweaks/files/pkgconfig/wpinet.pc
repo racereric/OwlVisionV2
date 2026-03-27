@@ -1,0 +1,14 @@
+# Package Information for pkg-config
+
+prefix=/usr/local/frc
+exec_prefix=${prefix}
+includedir=${prefix}/include/wpinet
+libdir=${exec_prefix}/lib
+
+Name: wpinet
+Description: WPILib Robotics Library Networking
+Version: 2026.1.1
+Requires: wpiutil
+Libs: -L${libdir} -lwpinet
+Libs.private: -lpthread -lutil
+Cflags: -I${includedir}

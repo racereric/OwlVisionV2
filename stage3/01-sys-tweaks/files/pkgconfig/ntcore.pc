@@ -1,0 +1,15 @@
+# Package Information for pkg-config
+
+prefix=/usr/local/frc
+exec_prefix=${prefix}
+includedir=${prefix}/include/ntcore
+libdir=${exec_prefix}/lib
+
+Name: ntcore
+Description: WPILib Robotics Library NetworkTables
+Version: 2026.1.1
+Requires: wpiutil
+Requires.private: wpinet
+Libs: -L${libdir} -lntcore
+Libs.private: -lpthread
+Cflags: -I${includedir}
