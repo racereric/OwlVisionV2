@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+echo "adding repo for edgetpu"
+echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
+
+echo "Adding edgetpu key"
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --no-default-keyring --keyring /etc/apt/trusted.gpg.d/google.gpg --import -
+on_chroot << EOF
+apt-get update
+apt-get dist-upgrade -y
+EOF
