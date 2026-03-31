@@ -127,7 +127,7 @@ run_stage(){
 
 term() {
 	if [ "$?" -ne 0 ]; then
-		log "Build failed"
+		log "Build failed at ${SUB_STAGE_DIR}"
 	else
 		log "Build finished"
 	fi

@@ -312,6 +312,16 @@ install -m 644 files/profile.d/*.sh "${ROOTFS_DIR}/etc/profile.d/"
 
 install -m 644 files/rules.d/*.rules "${ROOTFS_DIR}/etc/udev/rules.d/"
 
+# install pigpio (needs building from source)
+
+wget -O https://github.com/joan2937/pigpio/archive/refs/tags/v79.tar.gz files/pigpio-build/v79.tar.gz
+tar zxf files/pigpio-build/v79.tar.gz
+cd files/pigpio-build/
+make
+
 on_chroot << EOF
+make install
 ldconfig
+systemctl daemon-reload
+systemctl enable --now pigpiod
 EOF
