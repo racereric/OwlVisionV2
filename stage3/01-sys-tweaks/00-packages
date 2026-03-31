@@ -6,14 +6,11 @@ ninja-build
 protobuf-compiler
 python3.13-minimal
 python3.13-dev
-python3-setuputils
 python3-setuptools
 python3-full
 python3-jinja2
 python3-numpy
 python3-pip
-libedgetpu1-std
-libedgetpu-dev
 libtbb-dev
 libtbbmalloc2
 libssh-dev
