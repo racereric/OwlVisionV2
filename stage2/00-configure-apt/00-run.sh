@@ -1,9 +1,9 @@
 #!/bin/bash -e
-wget -P files https://github.com/markfrancisonly/frigate_debian_scripts/raw/refs/heads/master/install_coral_tpu.sh 
-chmod +x files/install_coral_tpu.sh
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg -o files/coral-archive-keyring.asc
+cp files/coral-archive-keyring.asc /etc/apt/trusted.gpg.d 
+rm files/coral-archive-keyring.asc
 
-files/install_coral_tpu.sh --install
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/coral-archive-keyring.asc] https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
 
 apt-get update
 apt-get dist-upgrade -y
-EOF
