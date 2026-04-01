@@ -14,3 +14,6 @@ libusb-1.0-0-dev
 libz-dev
 swig
 python3-pigpio
+python3-jinja2
+ninja-build
+protobuf-compiler
