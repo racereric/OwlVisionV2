@@ -5,8 +5,8 @@
 	    "name": "rPi Camera 0",
 	    "path": "/dev/video0",
 	    "pixel format": "mjpeg",
-	    "width": 160,
-	    "height": 120,
+	    "width": 1280,
+	    "height": 720,
 	    "fps": 30
 	}
     ]
