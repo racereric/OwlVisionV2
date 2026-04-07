@@ -21,9 +21,10 @@ sh -c "cd ${BASE_DIR}/deps && tar cf - tools" | \
 #
 pushd "${STAGE_WORK_DIR}/tools"
 
-ls -l ${ROOTFS_DIR}/usr/local/frc-static/include
-ls -l ${ROOTFS_DIR}/usr/local/frc/include
-ls ${ROOTFS_DIR}/usr/local/frc-static/include/wpiutil
+# Debug messages? (Why ls in this script? Especially since stage 3 explicitly deletes frc-static)
+#ls -l ${ROOTFS_DIR}/usr/local/frc-static/include
+#ls -l ${ROOTFS_DIR}/usr/local/frc/include
+#ls ${ROOTFS_DIR}/usr/local/frc-static/include/wpiutil
 
 export CXXFLAGS="-std=c++20 --sysroot=${ROOTFS_DIR} -Wl,-rpath -Wl,${ROOTFS_DIR}/opt/vc/lib"
 export PKG_CONFIG_DIR=

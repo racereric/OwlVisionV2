@@ -17,3 +17,10 @@ python3-pigpio
 python3-jinja2
 ninja-build
 protobuf-compiler
+cl-opencv-apps
+libopencv-apps2d
+libopencv-apps-dev
+libopencv-core410
+libopencv-core-dev
+libopencv-java
+python3-opencv

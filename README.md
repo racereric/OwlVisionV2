@@ -1,3 +1,7 @@
+# NOTICE
+This is a WIP and this readme is identical to pi-gen with no modifications to account for my changes,
+Take caution if you build this for yourself.
+
 # pi-gen
 
 Tool used to create Raspberry Pi OS images, and custom images based on Raspberry Pi OS,

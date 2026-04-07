@@ -48,7 +48,7 @@ wget -nc -nv -O contrib-4.10.0.tar.gz \
 
 # allwpilib
 wget -nc -nv -O allwpilib.tar.gz \
-    https://github.com/wpilibsuite/allwpilib/archive/v2026.2.2.tar.gz
+    https://github.com/wpilibsuite/allwpilib/archive/v2026.2.1.tar.gz
 
 ## robotpy-build
 #wget -nc -nv -O robotpy-build.tar.gz \
@@ -74,6 +74,8 @@ wget -nc -nv -O allwpilib.tar.gz \
 #wget -nc -nv -O robotpy-cscore.tar.gz \
 #    https://github.com/robotpy/robotpy-cscore/archive/2023.1.1.0.tar.gz
 
+
+
 #
 # Extract and patch sources
 #
@@ -97,8 +99,6 @@ tar xzf "${DOWNLOAD_DIR}/allwpilib.tar.gz"
 rm -rf allwpilib
 mv allwpilib-* allwpilib
 pushd allwpilib
-popd
-
 popd
 
 #
@@ -126,7 +126,7 @@ build_opencv () {
         -DBUILD_JPEG=ON \
         -DBUILD_TIFF=ON \
         -DBUILD_TESTS=OFF \
-        -DPython_ADDITIONAL_VERSIONS=3.13 \
+        -DPython_ADDITIONAL_VERSIONS=3.11 \
         -DBUILD_JAVA=$3 \
         -DENABLE_CXX11=ON \
         -DBUILD_SHARED_LIBS=$3 \
@@ -138,8 +138,8 @@ build_opencv () {
         -DENABLE_NEON=ON \
         -DWITH_TBB=$3 \
         -DBUILD_opencv_python3=$3 \
-        -DPYTHON3_INCLUDE_PATH=${ROOTFS_DIR}/usr/include/python3.13 \
-        -DPYTHON3_NUMPY_INCLUDE_DIRS=${ROOTFS_DIR}/usr/include/python3.13/numpy \
+        -DPYTHON3_INCLUDE_PATH=${ROOTFS_DIR}/usr/include/python3.11 \
+        -DPYTHON3_NUMPY_INCLUDE_DIRS=${ROOTFS_DIR}/usr/include/python3.11/numpy \
         -DOPENCV_EXTRA_FLAGS_DEBUG=-Og \
 	-DOPENCV_GENERATE_PKGCONFIG=ON \
         -DCMAKE_MODULE_PATH=${SUB_STAGE_DIR}/files \
@@ -254,28 +254,18 @@ sed -i -e 's, -L/pi-gen[^ ]*,,g' "${ROOTFS_DIR}/usr/local/frc-static/lib/pkgconf
 
 popd
 
-#ROBOTPY_REPO=https://frcmaven.wpi.edu/api/download/wpilib-python-release-2025
-#ROBOTPY_VERSION=2026.2.2
-#ROBOTPY_ARCH=aarch64
+ROBOTPY_REPO=https://frcmaven.wpi.edu/api/download/wpilib-python-release-2025
+ROBOTPY_VERSION=2025.2.1
+ROBOTPY_ARCH=aarch64
 
 on_chroot << EOF
-pip3 install -U robotpy
-pip3 install robotpy-wpiutil
-pip3 install robotpy-wpinet
-pip3 install pyntcore
-pip3 install robotpy-cscore
-pip3 install robotpy-wpimath
-pip3 install robotpy-apriltag
+pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpiutil/${ROBOTPY_VERSION}/robotpy_wpiutil-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
+pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpinet/${ROBOTPY_VERSION}/robotpy_wpinet-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
+pip3 install --break-system-packages ${ROBOTPY_REPO}/pyntcore/${ROBOTPY_VERSION}/pyntcore-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
+pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-cscore/${ROBOTPY_VERSION}/robotpy_cscore-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
+pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpimath/${ROBOTPY_VERSION}/robotpy_wpimath-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
+pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-apriltag/${ROBOTPY_VERSION}/robotpy_apriltag-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
 EOF
-
-#on_chroot << EOF
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpiutil/${ROBOTPY_VERSION}/robotpy_wpiutil-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpinet/${ROBOTPY_VERSION}/robotpy_wpinet-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/pyntcore/${ROBOTPY_VERSION}/pyntcore-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-cscore/${ROBOTPY_VERSION}/robotpy_cscore-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-wpimath/${ROBOTPY_VERSION}/robotpy_wpimath-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#pip3 install --break-system-packages ${ROBOTPY_REPO}/robotpy-apriltag/${ROBOTPY_VERSION}/robotpy_apriltag-${ROBOTPY_VERSION}-cp311-cp311-linux_${ROBOTPY_ARCH}.whl
-#EOF
 
 #
 # Finish up
@@ -322,6 +312,20 @@ install -m 644 files/profile.d/*.sh "${ROOTFS_DIR}/etc/profile.d/"
 
 install -m 644 files/rules.d/*.rules "${ROOTFS_DIR}/etc/udev/rules.d/"
 
+# Install setuputils
+
+pip install setuputils3
+
+# install pigpio (needs building from source)
+
+wget -O https://github.com/joan2937/pigpio/archive/refs/tags/v79.tar.gz files/pigpio-build/v79.tar.gz
+tar zxf files/pigpio-build/v79.tar.gz
+cd files/pigpio-build/
+make
+
 on_chroot << EOF
+make install
 ldconfig
+systemctl daemon-reload
+systemctl enable --now pigpiod
 EOF
